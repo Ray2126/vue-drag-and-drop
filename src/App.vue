@@ -39,7 +39,6 @@
       draggable="true"
       @dragstart="dragStart(index)"
       @dragover.prevent
-      @dragenter.prevent
       @drop="onDrop"
     >
       {{ item.text }}
