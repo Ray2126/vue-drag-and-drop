@@ -1,47 +1,58 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+  import { ref } from 'vue';
+
+  const items = ref([
+    { id: '1', text: 'first item', backgroundColor: 'lightblue' },
+    { id: '2', text: 'second item', backgroundColor: 'pink' },
+    { id: '3', text: 'third item', backgroundColor: 'yellow' },
+    { id: '4', text: 'fourth item', backgroundColor: 'lightgreen' },
+    { id: '5', text: 'fifth item', backgroundColor: 'violet' },
+  ]);
+
+  const dragStartIndex = ref(null)
+  function dragStart(index) {
+    dragStartIndex.value = index;
+  }
+
+  function onDrop(event) {
+    const draggedEl = event.currentTarget;
+    const children = [...draggedEl.parentElement.children];
+    const dragTargetIndex = children.indexOf(draggedEl);
+    if (dragStartIndex.value === dragTargetIndex) {
+      return;
+    }
+    const updated = [...items.value];
+    const [movedItem] = updated.splice(dragStartIndex.value, 1);
+    updated.splice(dragTargetIndex, 0, movedItem);
+    items.value = updated;
+    dragStartIndex.value = null;
+  }
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div
+      v-for="(item, index) in items"
+      :key="item.id"
+      class="item-container"
+      :style="{ backgroundColor: item.backgroundColor }"
+      draggable="true"
+      @dragstart="dragStart(index)"
+      @dragover.prevent
+      @dragenter.prevent
+      @drop="onDrop"
+    >
+      {{ item.text }}
     </div>
   </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+  .item-container {
+    height: 300px;
+    width: 300px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: larger;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
