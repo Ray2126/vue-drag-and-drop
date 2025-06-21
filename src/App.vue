@@ -30,7 +30,7 @@
 </script>
 
 <template>
-  <header>
+  <main>
     <div
       v-for="(item, index) in items"
       :key="item.id"
@@ -43,7 +43,7 @@
     >
       {{ item.text }}
     </div>
-  </header>
+  </main>
 </template>
 
 <style scoped>
